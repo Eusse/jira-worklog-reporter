@@ -1,0 +1,30 @@
+{
+  "name": "jira-reporter",
+  "version": "0.0.1",
+  "description": "Node console application to help you log time in jira issues",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eusse/node-jira-reporter.git"
+  },
+  "keywords": [
+    "jira",
+    "worklog",
+    "node",
+    "rest"
+  ],
+  "author": "Andres Eusse",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Eusse/node-jira-reporter/issues"
+  },
+  "homepage": "https://github.com/Eusse/node-jira-reporter#readme",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "inquirer": "^1.2.1"
+  }
+}
