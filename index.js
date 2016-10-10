@@ -12,4 +12,8 @@ fs.exists('config.json', (exists) => {
   }else{
     console.log('No configuration file found. Creating one.');
   }
+  inquirer.prompt([{'type': 'input', 'name': 'apiurl', 'message': 'Jira server url'},{'type': 'input', 'name': 'apiv', 'message': 'Jira server REST API version', 'default': '2'}]).then(function (answers) {
+    console.log(answers);
+  });
+
 });
