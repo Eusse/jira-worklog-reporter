@@ -1,0 +1,22 @@
+{
+  "questions" : [{
+    "type": "input",
+    "name": "apiurl",
+    "message": "Jira server host",
+    "default": "http://subdomain.atlassian.net"
+    },{
+    "type": "list",
+    "name": "apiv",
+    "message": "Jira server REST API version",
+    "default": "2",
+    "choices": [{"name": "v1", "value": "1"},{"name": "v2", "value": "2"}]
+    },{
+    "type": "input",
+    "name": "user",
+    "message": "Username"
+    },{
+    "type": "password",
+    "name": "pass",
+    "message": "Password"
+    }]
+}

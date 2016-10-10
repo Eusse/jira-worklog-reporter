@@ -10,10 +10,12 @@ fs.exists('config.json', (exists) => {
     var content = fs.readFileSync("config.json");
     console.log(content);
   }else{
-    console.log('No configuration file found. Creating one.');
+    console.log('No configuration file found. Starting to create one interactively');
+    var questionsfile = fs.readFileSync("config-generator.json");
+    let config = JSON.parse(questionsfile);
+    inquirer.prompt(config.questions).then(function (answers) {
+      let authToken = new Buffer(`${answers.user}:${answers.pass}`).toString('base64');
+      console.log(authToken);
+    });
   }
-  inquirer.prompt([{'type': 'input', 'name': 'apiurl', 'message': 'Jira server url'},{'type': 'input', 'name': 'apiv', 'message': 'Jira server REST API version', 'default': '2'}]).then(function (answers) {
-    console.log(answers);
-  });
-
 });
