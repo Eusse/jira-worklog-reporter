@@ -1,9 +1,9 @@
 {
   "questions" : [{
     "type": "input",
-    "name": "apiurl",
-    "message": "Jira server host",
-    "default": "http://subdomain.atlassian.net"
+    "name": "host",
+    "message": "Jira server host. no protocol",
+    "default": "subdomain.atlassian.net"
     },{
     "type": "list",
     "name": "apiv",
