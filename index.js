@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
-const commander = require('commander');
-const inquirer = require('inquirer');
-const fs = require("fs");
+const commander = require('commander'),
+inquirer = require('inquirer'),
+fs = require("fs"),
+JiraClient = require('jira-connector');
 
 fs.exists('config.json', (exists) => {
   if(exists){
@@ -16,6 +17,12 @@ fs.exists('config.json', (exists) => {
     inquirer.prompt(config.questions).then(function (answers) {
       let authToken = new Buffer(`${answers.user}:${answers.pass}`).toString('base64');
       console.log(authToken);
+      var jira = new JiraClient( {
+          host: answers.host,
+          basic_auth: {
+            base64: authToken
+          }
+      });
     });
   }
 });
