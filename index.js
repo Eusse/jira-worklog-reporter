@@ -5,10 +5,12 @@ inquirer = require('inquirer'),
 fs = require("fs"),
 JiraClient = require('jira-connector');
 
-var config = {}, issues, optionsQuestion;
+var config = {}, questions = {}, issues;
 try {
   let file = fs.readFileSync("config.json");
   config = JSON.parse(file);
+  file = fs.readFileSync("config-questions.json");
+  questions = JSON.parse(file);
   console.log('Configuration file found');
   try{
     var jira = new JiraClient({
@@ -26,9 +28,7 @@ try {
       console.log('Posting time to your issues');
     }else{
       console.log('No issues configured. Starting interactive configuration');
-      var issuesQuestions = fs.readFileSync("config-questions.json");
-      optionsQuestion = JSON.parse(issuesQuestions).issues.options;
-      inquirer.prompt(optionsQuestion).then(askOrSaveIssues);
+      inquirer.prompt(questions.issues.options).then(askOrSaveIssues);
     }
   } catch (error){
     console.log('Config file could be corrupted. Run the command again with the --config option.');
@@ -44,12 +44,18 @@ function saveIssues(){
 }
 
 function askOrSaveIssues(answer) {
-  if (answer.option == 'cancel') {
-    saveIssues();
-    return;
-  }else{
-    inquirer.prompt(optionsQuestion).then(askOrSaveIssues);
+  switch (answer.option) {
+    case 'cancel':
+      saveIssues();
+    break;
+    default:
+      inquirer.prompt(questions.issues.options).then(askOrSaveIssues);
+    break;
   }
+}
+
+function askForIssueKey(){
+  inquirer.prompt(keyQuestion).then(askForIssueKey);
 }
 
 function configureAuthentication(){
