@@ -62,10 +62,10 @@
     }
   ],
   "issues":{
-    "options":{
+    "mainMenu":{
       "type":"list",
-      "name":"option",
-      "message":"How do you wanna get your issues?",
+      "name":"mainMenuOption",
+      "message":"How do you wanna get your issue?",
       "default":"key",
       "choices":[
         {
@@ -81,6 +81,37 @@
           "value":"cancel"
         }
       ]
+    },
+    "keyMenu":{
+      "type":"list",
+      "name":"keyMenuOption",
+      "message":"What else do you wanna do?",
+      "default":"more",
+      "choices":[
+        {
+          "name":"Add another issue",
+          "value":"more"
+        },
+        {
+          "name":"View current issues",
+          "value":"view"
+        },
+        {
+          "name":"Finish configuration",
+          "value":"finish"
+        }
+      ]
+    },
+    "issueKey":{
+      "type":"input",
+      "name":"key",
+      "message": "Input the issue key"
+    },
+    "issueTime":{
+      "type":"input",
+      "name":"time",
+      "message":"Input the issue time as you would in a worklog.",
+      "default":"1d"
     }
   }
 }

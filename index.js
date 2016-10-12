@@ -5,7 +5,7 @@ inquirer = require('inquirer'),
 fs = require("fs"),
 JiraClient = require('jira-connector');
 
-var config = {}, questions = {}, issues;
+var config = {}, questions = {}, issues = [];
 try {
   let file = fs.readFileSync("config.json");
   config = JSON.parse(file);
@@ -28,7 +28,7 @@ try {
       console.log('Posting time to your issues');
     }else{
       console.log('No issues configured. Starting interactive configuration');
-      inquirer.prompt(questions.issues.options).then(askOrSaveIssues);
+      inquirer.prompt(questions.issues.mainMenu).then(mainMenuHandler);
     }
   } catch (error){
     console.log('Config file could be corrupted. Run the command again with the --config option.');
@@ -40,22 +40,46 @@ try {
 }
 
 function saveIssues(){
+  console.log(issues);
   console.log('Finished asking');
 }
 
-function askOrSaveIssues(answer) {
-  switch (answer.option) {
+function mainMenuHandler(answer) {
+  switch (answer.mainMenuOption) {
+    case 'key':
+      inquirer.prompt(questions.issues.issueKey).then(askForIssueKey);
+    break;
     case 'cancel':
       saveIssues();
     break;
     default:
-      inquirer.prompt(questions.issues.options).then(askOrSaveIssues);
-    break;
+      inquirer.prompt(questions.issues.mainMenu).then(mainMenuHandler);
   }
 }
 
-function askForIssueKey(){
-  inquirer.prompt(keyQuestion).then(askForIssueKey);
+function askForIssueKey(key){
+  //TODO: validate issue existance
+  inquirer.prompt(questions.issues.issueTime).then(function(time){
+    let issue = {
+      'key': key.key,
+      'time': time.time
+    };
+    issues.push(issue);
+    inquirer.prompt(questions.issues.keyMenu).then(keyMenuHandler);
+  });
+}
+
+function keyMenuHandler(answer){
+  switch (answer.keyMenuOption) {
+    case 'more':
+      inquirer.prompt(questions.issues.mainMenu).then(mainMenuHandler);
+      break;
+    case 'finish':
+      saveIssues();
+      break;
+    default:
+      inquirer.prompt(questions.issues.keyMenu).then(keyMenuHandler);
+  }
 }
 
 function configureAuthentication(){
