@@ -40,10 +40,13 @@ try {
 
 function viewIssues(){
   let total = issues.length;
+  console.log();
   issues.forEach(function (issue) {
     console.log(`${issue.key}: ${issue.log} (${issue.time})`);
   });
-  console.log(`A total of ${total} logs per day`);
+  let plural = (total == 1) ? 'log' : 'logs';
+  console.log(`A total of ${total} ${plural} per day`);
+  console.log();
 }
 
 function saveIssues(){
