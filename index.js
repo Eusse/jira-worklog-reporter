@@ -41,7 +41,7 @@ try {
 function viewIssues(){
   let total = issues.length;
   issues.forEach(function (issue) {
-    console.log(`${issue.key}: ${issue.time}`);
+    console.log(`${issue.key}: ${issue.log} (${issue.time})`);
   });
   console.log(`A total of ${total} logs per day`);
 }
@@ -73,10 +73,11 @@ function askForIssueKey(key){
     }, function(error, issue) {
       if(!error){
         console.log(`Issue ${key.key} found: ${issue.fields.summary}`);
-        inquirer.prompt(questions.issues.issueTime).then(function(time){
+        inquirer.prompt([questions.issues.issueTime, questions.issues.issueLog]).then(function(answers){
           let issue = {
-            'key': key.key,
-            'time': time.time
+            'key': key.key.toUpperCase(),
+            'time': answers.time,
+            'log': answers.log
           };
           issues.push(issue);
           inquirer.prompt(questions.issues.keyMenu).then(keyMenuHandler);

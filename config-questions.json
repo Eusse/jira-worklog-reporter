@@ -93,13 +93,19 @@
     "issueKey":{
       "type":"input",
       "name":"key",
-      "message": "Input the issue key"
+      "message": "Enter the issue key"
     },
     "issueTime":{
       "type":"input",
       "name":"time",
-      "message":"Input the issue time as you would in a worklog.",
+      "message":"Enter the issue time as you would in a worklog.",
       "default":"1d"
+    },
+    "issueLog":{
+      "type":"input",
+      "name":"log",
+      "message":"Enter the activity you want to log.",
+      "default":"Development"
     }
   }
 }
