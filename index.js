@@ -39,6 +39,14 @@ try {
   configureAuthentication();
 }
 
+function viewIssues(){
+  let total = issues.length;
+  issues.forEach(function (issue) {
+    console.log(`${issue.key}: ${issue.time}`);
+  });
+  console.log(`A total of ${total} logs per day`);
+}
+
 function saveIssues(){
   console.log(issues);
   console.log('Finished asking');
@@ -73,6 +81,10 @@ function keyMenuHandler(answer){
   switch (answer.keyMenuOption) {
     case 'more':
       inquirer.prompt(questions.issues.mainMenu).then(mainMenuHandler);
+      break;
+    case 'view':
+      viewIssues();
+      inquirer.prompt(questions.issues.keyMenu).then(keyMenuHandler);
       break;
     case 'finish':
       saveIssues();
