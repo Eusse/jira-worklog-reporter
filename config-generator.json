@@ -1,22 +1,86 @@
 {
-  "questions" : [{
-    "type": "input",
-    "name": "host",
-    "message": "Jira server host. no protocol",
-    "default": "subdomain.atlassian.net"
-    },{
-    "type": "list",
-    "name": "apiv",
-    "message": "Jira server REST API version",
-    "default": "2",
-    "choices": [{"name": "v1", "value": "1"},{"name": "v2", "value": "2"}]
-    },{
-    "type": "input",
-    "name": "user",
-    "message": "Username"
-    },{
-    "type": "password",
-    "name": "pass",
-    "message": "Password"
-    }]
+  "auth":[
+    {
+      "type":"input",
+      "name":"host",
+      "message":"Jira server host. no protocol",
+      "default":"subdomain.atlassian.net"
+    },
+    {
+      "type":"list",
+      "name":"protocol",
+      "message":"Jira server REST API version",
+      "default":"https",
+      "choices":[
+        {
+          "name":"Https",
+          "value":"https"
+        },
+        {
+          "name":"Http",
+          "value":"http"
+        }
+      ]
+    },
+    {
+      "type":"list",
+      "name":"version",
+      "message":"Jira server REST API version",
+      "default":"2",
+      "choices":[
+        {
+          "name":"v1",
+          "value":"1"
+        },
+        {
+          "name":"v2",
+          "value":"2"
+        }
+      ]
+    },
+    {
+      "type":"input",
+      "name":"port",
+      "message":"Port",
+      "default":"80"
+    },
+    {
+      "type":"input",
+      "name":"prefix",
+      "message":"Path Prefix",
+      "default":"/"
+    },
+    {
+      "type":"input",
+      "name":"user",
+      "message":"Username"
+    },
+    {
+      "type":"password",
+      "name":"pass",
+      "message":"Password"
+    }
+  ],
+  "issues":{
+    "options":{
+      "type":"list",
+      "name":"option",
+      "message":"How do you wanna get your issues?",
+      "default":"2",
+      "choices":[
+        {
+          "name":"Pick from my currently assigned",
+          "value":"assigned"
+        },
+        {
+          "name":"Input the issue key",
+          "value":"key"
+        },
+        {
+          "name":"I'm done for now",
+          "value":"cancel"
+        }
+      ]
+    }
+  }
 }
