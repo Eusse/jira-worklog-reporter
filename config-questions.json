@@ -3,8 +3,8 @@
     {
       "type":"input",
       "name":"host",
-      "message":"Jira server host. no protocol",
-      "default":"subdomain.atlassian.net"
+      "message":"Jira server host. no protocol, with path",
+      "default":"subdomain.atlassian.net/jira"
     },
     {
       "type":"list",
@@ -37,18 +37,6 @@
           "value":"2"
         }
       ]
-    },
-    {
-      "type":"input",
-      "name":"port",
-      "message":"Port",
-      "default":"80"
-    },
-    {
-      "type":"input",
-      "name":"prefix",
-      "message":"Path Prefix",
-      "default":"/"
     },
     {
       "type":"input",

@@ -5,7 +5,7 @@ inquirer = require('inquirer'),
 fs = require("fs"),
 JiraClient = require('jira-connector');
 
-var config = {}, questions = {}, issues = [];
+var config = {}, questions = {}, issues = [], jira;
 try {
   let file = fs.readFileSync("config.json");
   config = JSON.parse(file);
@@ -13,16 +13,15 @@ try {
   questions = JSON.parse(file);
   console.log('Configuration file found');
   try{
-    var jira = new JiraClient({
+    jira = new JiraClient({
       host: config.host,
       protocol: config.protocol,
-      path_prefix: config.path_prefix,
-      port: config.port,
       apiVersion: config.apiVersion,
       basic_auth: {
         base64: config.authToken
       }
     });
+    //TODO: Verify that the credentials works
     console.log('Loaded authentication from configuration file');
     if(config.issues){
       console.log('Posting time to your issues');
@@ -66,15 +65,30 @@ function mainMenuHandler(answer) {
 }
 
 function askForIssueKey(key){
-  //TODO: validate issue existance
-  inquirer.prompt(questions.issues.issueTime).then(function(time){
-    let issue = {
-      'key': key.key,
-      'time': time.time
-    };
-    issues.push(issue);
-    inquirer.prompt(questions.issues.keyMenu).then(keyMenuHandler);
-  });
+  console.log(`Validating issue ${key.key}. Please wait.`);
+  //TODO: put some kind of activity indicator?
+  try{
+    jira.issue.getIssue({
+      issueKey: key.key
+    }, function(error, issue) {
+      if(!error){
+        console.log(`Issue ${key.key} found: ${issue.fields.summary}`);
+        inquirer.prompt(questions.issues.issueTime).then(function(time){
+          let issue = {
+            'key': key.key,
+            'time': time.time
+          };
+          issues.push(issue);
+          inquirer.prompt(questions.issues.keyMenu).then(keyMenuHandler);
+        });
+      }else{
+        console.log(`Error: ${error.errorMessages}`);
+        inquirer.prompt(questions.issues.issueKey).then(askForIssueKey);
+      }
+    });
+  }catch(error){
+    console.log(error);
+  }
 }
 
 function keyMenuHandler(answer){
@@ -103,8 +117,6 @@ function configureAuthentication(){
     configContent = {
       'host' : answers.host,
       'protocol': answers.protocol,
-      'port': answers.port,
-      'path_prefix': answers.prefix,
       'apiVersion': answers.version,
       'authToken': authToken
     };
