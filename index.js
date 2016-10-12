@@ -26,7 +26,7 @@ try {
       console.log('Posting time to your issues');
     }else{
       console.log('No issues configured. Starting interactive configuration');
-      var issuesQuestions = fs.readFileSync("config-generator.json");
+      var issuesQuestions = fs.readFileSync("config-questions.json");
       optionsQuestion = JSON.parse(issuesQuestions).issues.options;
       inquirer.prompt(optionsQuestion).then(askOrSaveIssues);
     }
@@ -36,28 +36,8 @@ try {
   }
 } catch (e) {
   console.log('No configuration file found. Starting to create one interactively');
-  var authQuestions = fs.readFileSync("config-generator.json");
-  let config = JSON.parse(authQuestions);
-  var configContent = {};
-  inquirer.prompt(config.auth).then(function (answers) {
-    let authToken = new Buffer(`${answers.user}:${answers.pass}`).toString('base64');
-    configContent = {
-      'host' : answers.host,
-      'protocol': answers.protocol,
-      'port': answers.port,
-      'path_prefix': answers.prefix,
-      'apiVersion': answers.version,
-      'authToken': authToken
-    };
-    let buffer = new Buffer(JSON.stringify(configContent));
-    fs.writeFileSync(`${__dirname}/config.json`, buffer, {'flag': 'w+'}, (error) => {
-      if (error) throw err;
-      console.log('Config file saved');
-    });
-    console.log('Configuration complete. Run the command again for more options');
-  });
+  configureAuthentication();
 }
-
 
 function saveIssues(){
   console.log('Finished asking');
@@ -70,4 +50,30 @@ function askOrSaveIssues(answer) {
   }else{
     inquirer.prompt(optionsQuestion).then(askOrSaveIssues);
   }
+}
+
+function configureAuthentication(){
+  let configQuestions = fs.readFileSync("config-questions.json");
+  let questions = JSON.parse(configQuestions).auth;
+  var configContent = {};
+  inquirer.prompt(questions).then(function (answers) {
+    let authToken = new Buffer(`${answers.user}:${answers.pass}`).toString('base64');
+    configContent = {
+      'host' : answers.host,
+      'protocol': answers.protocol,
+      'port': answers.port,
+      'path_prefix': answers.prefix,
+      'apiVersion': answers.version,
+      'authToken': authToken
+    };
+    let buffer = new Buffer(JSON.stringify(configContent));
+    fs.writeFileSync(`${__dirname}/config.json`, buffer, {'flag': 'w+'}, (error) => {
+      if (error){
+        console.log(`Cloud not save configuration file. ${error.message}`);
+        throw error;
+      } else{
+        console.log('Authentication config saved');
+      }
+    });
+  });
 }
