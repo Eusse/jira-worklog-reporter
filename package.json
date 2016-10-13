@@ -10,20 +10,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Eusse/node-jira-reporter.git"
+    "url": "git+https://github.com/Eusse/jira-worklog-reporter.git"
   },
   "keywords": [
     "jira",
     "worklog",
     "node",
-    "rest"
+    "rest",
+    "api",
+    "console"
   ],
   "author": "Andres Eusse",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Eusse/node-jira-reporter/issues"
+    "url": "https://github.com/Eusse/jira-worklog-reporter/issues"
   },
-  "homepage": "https://github.com/Eusse/node-jira-reporter#readme",
+  "homepage": "https://github.com/Eusse/jira-worklog-reporter#readme",
   "dependencies": {
     "commander": "^2.9.0",
     "inquirer": "^1.2.1",
