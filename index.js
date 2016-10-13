@@ -7,9 +7,9 @@ JiraClient = require('jira-connector');
 
 var config = {}, questions = {}, issues = [], jira;
 try {
-  let file = fs.readFileSync("config.json");
+  let file = fs.readFileSync(`${__dirname}/config.json`);
   config = JSON.parse(file);
-  file = fs.readFileSync("config-questions.json");
+  file = fs.readFileSync(`${__dirname}/config-questions.json`);
   questions = JSON.parse(file);
   console.log('Configuration file found');
   try{
