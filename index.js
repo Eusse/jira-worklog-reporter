@@ -89,6 +89,7 @@ function askForIssueKey(key){
       if(!error){
         console.log(`Issue ${key.key} found: ${issue.fields.summary}`);
         inquirer.prompt([questions.issues.issueTime, questions.issues.issueLog]).then(function(answers){
+          //TODO: Validate time format
           let issue = {
             'key': key.key.toUpperCase(),
             'time': answers.time,
@@ -155,15 +156,50 @@ function createWorklog(){
         worklog: {
           comment: issue.log,
           started: new Date(),
-          timeSpentSeconds: issue.time
+          timeSpentSeconds: jiraTimetoSeconds(issue.time)
         }
-    }, function(error, issue) {
+    }, function(error, response) {
         if(!error){
-
+          console.log(response);
         }else{
-          console.log('');
+          console.log(`Could not log work for ${issue.key}`);
+          console.log(`Error details: ${error.errorMessages[0]}`);
         }
     });
     console.log(`Logging ${issue.key}: ${issue.log} (${issue.time})`);
   });
+}
+
+function jiraTimetoSeconds(time){
+  let tokens = time.split(' ');
+  let seconds = 0;
+  tokens.forEach(function(token){
+    let value = parseFloat(token.match(/[\d.]+/).toString());
+    let scope = token.match(/[a-zA-Z]+/).toString().toLowerCase();
+    let int = parseInt(value);// integer part of the number
+    let decimal = parseInt((value % 1).toFixed(2).substring(2)); // decimal part of the number, if exists
+    let fraction = 0, //decimal part of the number in seconds
+        factor = 1; //conversion factor of the desired unit to seconds.
+    switch (scope) {
+      case 'm':
+        factor = 60; //seconds in a minute
+        break;
+      case 'h':
+        factor = 3600; //seconds in an hour
+        break;
+      case 'd':
+        factor = 86400; //seconds in a day
+        break;
+      case 'w':
+        factor = 604800; //seconds in a week
+        break;
+      default:
+        factor = 1;
+    }
+    if(decimal !== 0){
+      fraction = ( decimal * factor / 100);
+    }
+    seconds += (int * factor) + fraction;
+  });
+  return seconds;
 }
