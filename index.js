@@ -25,6 +25,8 @@ try {
     console.log('Loaded authentication from configuration file');
     if(config.issues){
       console.log('Posting time to your issues');
+      createWorklog();
+      //TODO: verify no actual logs exists for this day
     }else{
       console.log('No issues configured. Starting interactive configuration');
       inquirer.prompt(questions.issues.mainMenu).then(mainMenuHandler);
@@ -50,6 +52,7 @@ function viewIssues(){
 }
 
 function saveIssues(){
+  //TODO: Ask when to overwrite or append this configuration
   config.issues = issues;
   let buffer = new Buffer(JSON.stringify(config));
   fs.writeFileSync(`${__dirname}/config.json`, buffer, {'flag': 'w'}, (error) => {
@@ -142,5 +145,25 @@ function configureAuthentication(){
         console.log('Authentication config saved');
       }
     });
+  });
+}
+
+function createWorklog(){
+  config.issues.forEach(function (issue) {
+    jira.issue.addWorkLog({
+        issueKey: issue.key,
+        worklog: {
+          comment: issue.log,
+          started: new Date(),
+          timeSpentSeconds: issue.time
+        }
+    }, function(error, issue) {
+        if(!error){
+
+        }else{
+          console.log('');
+        }
+    });
+    console.log(`Logging ${issue.key}: ${issue.log} (${issue.time})`);
   });
 }
