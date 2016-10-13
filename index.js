@@ -50,7 +50,16 @@ function viewIssues(){
 }
 
 function saveIssues(){
-  console.log(issues);
+  config.issues = issues;
+  let buffer = new Buffer(JSON.stringify(config));
+  fs.writeFileSync(`${__dirname}/config.json`, buffer, {'flag': 'w'}, (error) => {
+    if (error){
+      console.log(`Cloud not save configuration file. ${error.message}`);
+      throw error;
+    } else{
+      console.log('Worklog configuration saved');
+    }
+  });
   console.log('Finished asking');
 }
 
