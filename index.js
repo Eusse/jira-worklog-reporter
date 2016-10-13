@@ -67,6 +67,7 @@ function saveIssues(){
 }
 
 function mainMenuHandler(answer) {
+  //TODO: Enable deleting issues from the current configuration
   switch (answer.mainMenuOption) {
     case 'key':
       inquirer.prompt(questions.issues.issueKey).then(askForIssueKey);
@@ -151,22 +152,22 @@ function configureAuthentication(){
 
 function createWorklog(){
   config.issues.forEach(function (issue) {
+    let worklog = {
+      comment: issue.log,
+      timeSpentSeconds: jiraTimetoSeconds(issue.time)
+    };
     jira.issue.addWorkLog({
         issueKey: issue.key,
-        worklog: {
-          comment: issue.log,
-          started: new Date(),
-          timeSpentSeconds: jiraTimetoSeconds(issue.time)
-        }
+        worklog: worklog
     }, function(error, response) {
         if(!error){
+          console.log(`Uploading worklog ${issue.key}: ${issue.log} (${issue.time})`);
           console.log(response);
         }else{
           console.log(`Could not log work for ${issue.key}`);
-          console.log(`Error details: ${error.errorMessages[0]}`);
+          console.log(`Error details: ${error}`);
         }
     });
-    console.log(`Logging ${issue.key}: ${issue.log} (${issue.time})`);
   });
 }
 
