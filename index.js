@@ -7,10 +7,11 @@ JiraClient = require('jira-connector');
 
 var config = {}, questions = {}, issues = [], jira;
 try {
-  let file = fs.readFileSync(`${__dirname}/config.json`);
-  config = JSON.parse(file);
-  file = fs.readFileSync(`${__dirname}/config-questions.json`);
+  let file = fs.readFileSync(`${__dirname}/config-questions.json`);
   questions = JSON.parse(file);
+  console.log('loaded questions');
+  file = fs.readFileSync(`${__dirname}/config.json`);
+  config = JSON.parse(file);
   console.log('Configuration file found');
   try{
     jira = new JiraClient({
@@ -87,7 +88,7 @@ function askForIssueKey(key){
     jira.issue.getIssue({
       issueKey: key.key
     }, function(error, issue) {
-      if(!error){
+      if(issue){
         console.log(`Issue ${key.key} found: ${issue.fields.summary}`);
         inquirer.prompt([questions.issues.issueTime, questions.issues.issueLog]).then(function(answers){
           //TODO: Validate time format
@@ -99,6 +100,9 @@ function askForIssueKey(key){
           issues.push(issue);
           inquirer.prompt(questions.issues.keyMenu).then(keyMenuHandler);
         });
+      }else if(!error.errorMessages){
+        console.log('Server or credentials error. I suggest you to config authentication again.');
+        console.log(error);
       }else{
         console.log(`Error: ${error.errorMessages}`);
         inquirer.prompt(questions.issues.issueKey).then(askForIssueKey);
@@ -127,10 +131,8 @@ function keyMenuHandler(answer){
 }
 
 function configureAuthentication(){
-  let configQuestions = fs.readFileSync("config-questions.json");
-  let questions = JSON.parse(configQuestions).auth;
   var configContent = {};
-  inquirer.prompt(questions).then(function (answers) {
+  inquirer.prompt(questions.auth).then(function (answers) {
     let authToken = new Buffer(`${answers.user}:${answers.pass}`).toString('base64');
     configContent = {
       'host' : answers.host,
