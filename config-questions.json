@@ -61,10 +61,6 @@
           "value":"key"
         },
         {
-          "name":"Pick from my currently assigned",
-          "value":"assigned"
-        },
-        {
           "name":"I'm done for now",
           "value":"cancel"
         }
