@@ -1,6 +1,6 @@
 {
   "name": "jira-worklog-reporter",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Node console application to help you log time in jira issues",
   "main": "index.js",
   "bin": "index.js",
