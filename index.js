@@ -140,14 +140,30 @@ function configureAuthentication(){
       'apiVersion': answers.version,
       'authToken': authToken
     };
-    let buffer = new Buffer(JSON.stringify(configContent));
-    fs.writeFileSync(`${__dirname}/config.json`, buffer, {'flag': 'w+'}, (error) => {
-      if (error){
-        console.log(`Cloud not save configuration file. ${error.message}`);
-        throw error;
-      } else{
-        console.log('Authentication config saved');
+    jira = new JiraClient({
+      host: answers.host,
+      protocol: answers.protocol,
+      apiVersion: answers.version,
+      basic_auth: {
+        base64: authToken
       }
+    });
+    jira.myself.getMyself({},
+      function(error, response) {
+        if(!error){
+          console.log(`Credentials are correct. Welcome ${response.displayName}`);
+          let buffer = new Buffer(JSON.stringify(configContent));
+          fs.writeFileSync(`${__dirname}/config.json`, buffer, {'flag': 'w+'}, (error) => {
+            if (error){
+              console.log(`Cloud not save configuration file. ${error.message}`);
+              throw error;
+            } else{
+              console.log('Authentication config saved');
+            }
+          });
+        }else{
+          console.log(`Credentials are not correct: ${error}`);
+        }
     });
   });
 }
